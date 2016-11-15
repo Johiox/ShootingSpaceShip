@@ -18,14 +18,20 @@ class Enemy extends Sprite{
     private int max_y;
     private float delta_y_inc;
     private final int collision_distance = 10;
+    private int healthPoint;
 
-    public Enemy(int x, int y, float delta_x, float delta_y, int max_x, int max_y, float delta_y_inc) {
+    public Enemy(int x, int y, float delta_x, float delta_y, int max_x, int max_y, float delta_y_inc, int healthPoint) {
         super(x, y);
         this.delta_x = delta_x;
         this.delta_y = delta_y;
         this.max_x = max_x;
         this.max_y = max_y;
         this.delta_y_inc = delta_y_inc;
+        this.healthPoint = healthPoint;
+    }
+    
+    public int getHealth() {
+        return healthPoint;
     }
 
     public void move() {
@@ -46,16 +52,18 @@ class Enemy extends Sprite{
         }
     }
 
-    public boolean isCollidedWithShot(Shot[] shots) {
-        for (Shot shot : shots) {
-            if (shot == null) {
-                continue;
-            }
-            if (-collision_distance <= (this.getY() - shot.getY()) && (this.getY() - shot.getY() <= collision_distance)) {
-                if (-collision_distance <= (this.getX() - shot.getX()) && (this.getX() - shot.getX() <= collision_distance)) {
-                    //collided.
-                    shot.collided();
-                    return true;
+    public boolean isCollidedWithShot(ShotType[][] shots) {
+        for(ShotType[] shoting : shots) {
+            for (ShotType shot : shoting) {
+                if (shot == null) {
+                    continue;
+                }
+                if (-collision_distance <= (this.getY() - shot.getY()) && (this.getY() - shot.getY() <= collision_distance)) {
+                    if (-collision_distance <= (this.getX() - shot.getX()) && (this.getX() - shot.getX() <= collision_distance)) {
+                        //collided.
+                        healthPoint -= shot.collided();
+                        return true;
+                    }
                 }
             }
         }
@@ -71,9 +79,25 @@ class Enemy extends Sprite{
         }
         return false;
     }
+    
+    public boolean isGrazeWithPlayer(Player player) {
+        if(-collision_distance - 15 <= (this.getY() - player.getY()) && (this.getY() - player.getY() <= collision_distance + 15)) {
+            if(-collision_distance - 15 <= (this.getX() - player.getX()) && (this.getX() - player.getX() <= collision_distance + 15)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void draw(Graphics g) {
         g.setColor(Color.yellow);
+        int[] x_poly = {(int)this.getX(), (int)this.getX() - 10, (int)this.getX(), (int)this.getX() + 10};
+        int[] y_poly = {(int)this.getY() + 15, (int)this.getY(), (int)this.getY() + 10, (int)this.getY()};
+        g.fillPolygon(x_poly, y_poly, 4);
+    }
+    
+    public void grazedEnemy(Graphics g) {
+        g.setColor(Color.blue);
         int[] x_poly = {(int)this.getX(), (int)this.getX() - 10, (int)this.getX(), (int)this.getX() + 10};
         int[] y_poly = {(int)this.getY() + 15, (int)this.getY(), (int)this.getY() + 10, (int)this.getY()};
         g.fillPolygon(x_poly, y_poly, 4);

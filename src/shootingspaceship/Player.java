@@ -33,8 +33,8 @@ public class Player extends Sprite{
         }
     }
 
-    public Shot generateShot() {
-        Shot shot = new Shot((int)this.getX(), (int)this.getY());
+    public ShotType generateShot(int damage) {
+        ShotType shot = new ShotType((int)this.getX(), (int)this.getY(), damage);
         return shot;
     }
 

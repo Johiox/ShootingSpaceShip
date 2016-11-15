@@ -19,6 +19,14 @@ class Shot extends Sprite{
         super(x, y);
         alive = true;
     }
+    
+    public boolean getAlive() {
+        return alive;
+    }
+    
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 
     public void moveShot(int speed) {
         moveY(speed);
@@ -30,9 +38,5 @@ class Shot extends Sprite{
         }
         g.setColor(Color.yellow);
         g.fillOval((int)getX(), (int)getY(), radius, radius);
-    }
-
-    public void collided() {
-        alive = false;
     }
 }
