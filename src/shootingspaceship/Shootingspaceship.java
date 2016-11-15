@@ -55,7 +55,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
     public Shootingspaceship() {
         setBackground(Color.black);
         setPreferredSize(new Dimension(width, height));
-        player = new Player(width / 2, (int) (height * 0.9), playerMargin, width-playerMargin );
+        player = new Player(width / 2, (int) (height * 0.9), playerMargin, width-playerMargin, playerMargin, height-playerMargin);
         shots = new ShotType[4][];
         shots[0] = new ShotType[maxFirstShot];
         shots[1] = new ShotType[maxSecondShot];
@@ -64,7 +64,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
         shotCount = new int[4];
         shotCount[0] = infiniteFire;
         for(int i = 1; i < shotCount.length; ++i) {
-            shotCount[i] = 0;
+            shotCount[i] = 25;
         }
         increaseSecondShot = 32;
         increaseThirdShot = 16;
@@ -125,11 +125,11 @@ public class Shootingspaceship extends JPanel implements Runnable {
                     playerMoveDown = true;
                     break;
                 case KeyEvent.VK_SHIFT:
-                    shotSpeed /= 2;
-                    playerLeftSpeed /= 2;
-                    playerRightSpeed /= 2;
-                    playerUpSpeed /= 2;
-                    playerDownSpeed /= 2;
+                    shotSpeed = -5 / 2;
+                    playerLeftSpeed = -3 / 2;
+                    playerRightSpeed = 3 / 2;
+                    playerUpSpeed = -3 / 2;
+                    playerDownSpeed = 3 / 2;
                     break;
                 case KeyEvent.VK_P:
                     if(gamePause) {
@@ -168,11 +168,11 @@ public class Shootingspaceship extends JPanel implements Runnable {
                     playerMoveDown = false;
                     break;
                 case KeyEvent.VK_SHIFT:
-                    shotSpeed *= 2;
-                    playerLeftSpeed *= 2;
-                    playerRightSpeed *= 2;
-                    playerUpSpeed *= 2;
-                    playerDownSpeed *= 2;
+                    shotSpeed = -5;
+                    playerLeftSpeed = -3;
+                    playerRightSpeed = 3;
+                    playerUpSpeed = -3;
+                    playerDownSpeed = 3;
                     break;
             }
         }
@@ -204,8 +204,8 @@ public class Shootingspaceship extends JPanel implements Runnable {
     }
 
     public void run() {
-        //int c=0;
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        //int c=0;
 
         while (true) {
             //System.out.println( ++c );
@@ -226,16 +226,16 @@ public class Shootingspaceship extends JPanel implements Runnable {
             }
 
             if (playerMoveLeft) {
-                player.moveX(playerLeftSpeed);
+                player.movingX(playerLeftSpeed);
             }
             if (playerMoveRight) {
-                player.moveX(playerRightSpeed);
+                player.movingX(playerRightSpeed);
             }
             if(playerMoveUp) {
-                player.moveY(playerUpSpeed);
+                player.movingY(playerUpSpeed);
             }
             if(playerMoveDown) {
-                player.moveY(playerDownSpeed);
+                player.movingY(playerDownSpeed);
             }
             if(playerFire) {
                 if(countFire == 10) { // single shot and wait nine times
@@ -243,7 +243,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
                         if(0 < shotCount[currentShot])
                             if(shots[currentShot][i] == null) {
                                 shots[currentShot][i] = player.generateShot(currentShot + 1);
-                                if(currentShot != 1) {
+                                if(currentShot != 0) {
                                     --shotCount[currentShot];
                                 }
                                 break;
@@ -268,7 +268,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
             }
 
             repaint();
-
+            
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
@@ -276,7 +276,6 @@ public class Shootingspaceship extends JPanel implements Runnable {
             }
 
             Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        }
     }
 
     public void initImage(Graphics g) {
@@ -301,36 +300,28 @@ public class Shootingspaceship extends JPanel implements Runnable {
         player.drawPlayer(g);
 
         Iterator enemyList = enemies.iterator();
-        Iterator itemList = items.iterator();
         while (enemyList.hasNext()) {
             Enemy enemy = (Enemy) enemyList.next();
             enemy.draw(g);
             if (enemy.isCollidedWithShot(shots)) {
                 if(enemy.getHealth() < 0) {
-                    if(rand.nextBoolean()) { // Creation Item is 1/2
-                        Item newItem = new Item((int)enemy.getX(), (int)enemy.getY(), rand.nextInt(4));
+                    if(rand.nextInt(9) <= 2) { // Creation Item is 1/2
+                        Item newItem = new Item((int)enemy.getX(), (int)enemy.getY(), enemy.getDeltaX(), enemy.getDeltaY(), enemy.getMaxX(), enemy.getMaxY(), enemy.getDeltaYINC(), rand.nextInt(4));
                         items.add(newItem);
                     }
                     enemyList.remove();
                     --enemySize;
                 }
             }
-            Item item = (Item)itemList.next();
-            item.draw(g);
-            if (enemy.isCollidedWithPlayer(player)) {
-                if(playerHealth < 0) {
-                    enemyList.remove();
-                    System.exit(0);
+            Iterator itemList = items.iterator();
+            if(itemList.hasNext()) {
+                Item item = (Item)itemList.next();
+                item.draw(g);
+                if(item.count()) {
+                    itemList.remove();
                 }
-                else {
-                    --playerHealth;
-                }
-            }
-            if(enemy.isGrazeWithPlayer(player)) {
-                enemy.grazedEnemy(g);
-            }
-            if(item.isCollidedWithPlayer(player)) {
-                switch(item.getItemNum()) {
+                if(item.isCollidedWithPlayer(player)) {
+                    switch(item.getItemNum()) {
                         case 0:
                             if(this.shotCount[1] + increaseSecondShot > maxSecondShot) {
                                 this.shotCount[1] = maxSecondShot;
@@ -358,6 +349,19 @@ public class Shootingspaceship extends JPanel implements Runnable {
                         case 3:
                             break;
                     }
+                }
+            }
+            if (enemy.isCollidedWithPlayer(player)) {
+                if(playerHealth < 0) {
+                    enemyList.remove();
+                    System.exit(0);
+                }
+                else {
+                    --playerHealth;
+                }
+            }
+            if(enemy.isGrazeWithPlayer(player)) {
+                enemy.grazedEnemy(g);
             }
         }
 
