@@ -14,24 +14,41 @@ import java.awt.Color;
 class Enemy extends Sprite{
     private float delta_x;
     private float delta_y;
-    private int max_x;
-    private int max_y;
     private float delta_y_inc;
     private final int collision_distance = 10;
     private int healthPoint;
 
     public Enemy(int x, int y, float delta_x, float delta_y, int max_x, int max_y, float delta_y_inc, int healthPoint) {
-        super(x, y);
+        super(x, y, max_x, max_y);
         this.delta_x = delta_x;
         this.delta_y = delta_y;
-        this.max_x = max_x;
-        this.max_y = max_y;
         this.delta_y_inc = delta_y_inc;
         this.healthPoint = healthPoint;
     }
     
     public int getHealth() {
         return healthPoint;
+    }
+    public float getDeltaX() {
+        return delta_x;
+    }
+    public void setDeltaX(float delta_x) {
+        this.delta_x = delta_x;
+    }
+    public float getDeltaY() {
+        return delta_y;
+    }
+    public void setDeltaY(float delta_y) {
+        this.delta_y = delta_y;
+    }
+    public float getDeltaYINC() {
+        return delta_y_inc;
+    }
+    public void setDeltaYINC(float delta_y_inc) {
+        this.delta_y_inc = delta_y_inc;
+    }
+    public int getCollisionDistance() {
+        return collision_distance;
     }
 
     public void move() {
@@ -42,11 +59,11 @@ class Enemy extends Sprite{
             this.setX(0);
             delta_x = -delta_x;
         }
-        else if (this.getX() > max_x) {
-            this.setX(max_x);
+        else if (this.getX() > this.getMaxX()) {
+            this.setX(this.getMaxX());
             delta_x = -delta_x;
         }
-        if (this.getY() > max_y) {
+        if (this.getY() > this.getMaxY()) {
             this.setY(0);
             delta_y += delta_y_inc;
         }

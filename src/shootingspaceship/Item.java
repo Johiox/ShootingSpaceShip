@@ -12,16 +12,53 @@ import java.awt.Graphics;
  *
  * @author sungyu
  */
-public class Item extends Enemy{
+class Item extends Enemy{
     private int itemNum;
+    private int count;
     
-    public Item(int x, int y, int itemNum) {
-        super(x, y, (float)1.5, (float)1.5, 1280, 1024, (float)1.0, 1);
+    public Item(int x, int y, float delta_x, float delta_y, int max_x, int max_y, float delta_y_inc, int itemNum) {
+        super(x, y, delta_x, delta_y, max_x, max_y, delta_y_inc, 1);
         this.itemNum = itemNum;
+        count = 0;
     }
     
     public int getItemNum() {
         return itemNum;
+    }
+    
+    public void move() {
+        this.moveX(this.getDeltaX());
+        this.moveY(this.getDeltaY());
+
+        if(this.getX() < 0) {
+            this.setX(0);
+            this.setDeltaX(-this.getDeltaX());
+            ++count;
+        }
+        else if(this.getX() >= this.getMaxX()) {
+            this.setX(this.getMaxX());
+            this.setDeltaX(-this.getDeltaX());
+            ++count;
+        }
+        if (this.getY() >= this.getMaxY()) {//y값 튕김 효과
+            this.setY(this.getMaxY());
+            this.setDeltaY(this.getDeltaY() - this.getDeltaYINC());
+            ++count;
+        }
+        else if (this.getY() < 0) {
+            this.setDeltaY(this.getDeltaY() + this.getDeltaYINC());
+            ++count;
+        }
+    }
+    
+    public boolean count() {
+        if(count == 10) {
+            count = 0;
+            return false;
+        }
+        else {
+            return true;
+        }
     }
     
     public void draw(Graphics g) {

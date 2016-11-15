@@ -12,8 +12,8 @@ package shootingspaceship;
 class ShotType extends Shot{
     private int damage;
     
-    public ShotType(int x, int y, int damage) {
-        super(x, y);
+    public ShotType(int x, int y, int max_x, int max_y, int damage) {
+        super(x, y, max_x, max_y);
         this.damage = damage;
     }
     

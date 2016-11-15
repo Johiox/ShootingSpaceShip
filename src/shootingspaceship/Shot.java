@@ -15,8 +15,8 @@ class Shot extends Sprite{
     private boolean alive;
     private final int radius = 3;
 
-    public Shot(int x, int y) {
-        super(x, y);
+    public Shot(int x, int y, int max_x, int max_y) {
+        super(x, y, max_x, max_y);
         alive = true;
     }
     

@@ -12,9 +12,13 @@ package shootingspaceship;
 class Sprite {
     private float pos_x;
     private float pos_y;
-    public Sprite(float pos_x, float pos_y) {
+    private int max_x;
+    private int max_y;
+    public Sprite(float pos_x, float pos_y, int max_x, int max_y) {
         this.pos_x = pos_x;
         this.pos_y = pos_y;
+        this.max_x = max_x;
+        this.max_y = max_y;
     }
     public float getX() {
         return pos_x;
@@ -33,5 +37,11 @@ class Sprite {
     }
     public void moveY(float delta) {
         this.pos_y += delta;
+    }
+    public int getMaxX() {
+        return max_x;
+    }
+    public int getMaxY() {
+        return max_y;
     }
 }

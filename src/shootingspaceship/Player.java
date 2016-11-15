@@ -13,28 +13,37 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class Player extends Sprite{
+class Player extends Sprite{
     private int min_x;
-    private int max_x;
+    private int min_y;
 
-    public Player(int x, int y, int min_x, int max_x) {
-        super(x, y);
+    public Player(int x, int y, int min_x, int max_x, int min_y, int max_y) {
+        super(x, y, max_x, max_y);
         this.min_x = min_x;
-        this.max_x = max_x;
+        this.min_y = min_y;
     }
 
-    public void moveX(int speed) {
+    public void movingX(int speed) {
         this.moveX(speed);
         if(this.getX() < min_x) {
             this.setX(min_x);
         }
-        if(this.getX() > max_x) {
-            this.setX(max_x);
+        if(this.getX() > this.getMaxX()) {
+            this.setX(this.getMaxX());
+        }
+    }
+    public void movingY(int speed) {
+        this.moveY(speed);
+        if(this.getY() < min_y) {
+            this.setY(min_y);
+        }
+        if(this.getY() > this.getMaxY()) {
+            this.setY(this.getMaxY());
         }
     }
 
     public ShotType generateShot(int damage) {
-        ShotType shot = new ShotType((int)this.getX(), (int)this.getY(), damage);
+        ShotType shot = new ShotType((int)this.getX(), (int)this.getY(), this.getMaxX(), this.getMaxY(), damage);
         return shot;
     }
 
