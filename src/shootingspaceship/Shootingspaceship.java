@@ -64,7 +64,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
         shotCount = new int[4];
         shotCount[0] = infiniteFire;
         for(int i = 1; i < shotCount.length; ++i) {
-            shotCount[i] = 25;
+            shotCount[i] = 0;
         }
         increaseSecondShot = 32;
         increaseThirdShot = 16;
@@ -204,8 +204,8 @@ public class Shootingspaceship extends JPanel implements Runnable {
     }
 
     public void run() {
-        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
         //int c=0;
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 
         while (true) {
             //System.out.println( ++c );
@@ -268,7 +268,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
             }
 
             repaint();
-            
+
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
@@ -276,6 +276,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
             }
 
             Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        }
     }
 
     public void initImage(Graphics g) {
