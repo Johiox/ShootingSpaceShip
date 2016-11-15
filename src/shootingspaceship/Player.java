@@ -13,43 +13,35 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class Player {
-    private int x_pos;
-    private int y_pos;
+public class Player extends Sprite{
     private int min_x;
     private int max_x;
 
     public Player(int x, int y, int min_x, int max_x) {
-        x_pos = x;
-        y_pos = y;
+        super(x, y);
         this.min_x = min_x;
         this.max_x = max_x;
     }
 
     public void moveX(int speed) {
-        x_pos += speed;
-        if( x_pos < min_x) x_pos = min_x;
-        if( x_pos > max_x) x_pos = max_x;
-    }
-
-    public int getX() {
-        return x_pos;
-    }
-
-    public int getY() {
-        return y_pos;
+        this.moveX(speed);
+        if(this.getX() < min_x) {
+            this.setX(min_x);
+        }
+        if(this.getX() > max_x) {
+            this.setX(max_x);
+        }
     }
 
     public Shot generateShot() {
-        Shot shot = new Shot(x_pos, y_pos);
-
+        Shot shot = new Shot((int)this.getX(), (int)this.getY());
         return shot;
     }
 
     public void drawPlayer(Graphics g) {
         g.setColor(Color.red);
-        int[] x_poly = {x_pos, x_pos - 10, x_pos, x_pos + 10};
-        int[] y_poly = {y_pos, y_pos + 15, y_pos + 10, y_pos + 15};
+        int[] x_poly = {(int)this.getX(), (int)this.getX() - 10, (int)this.getX(), (int)this.getX() + 10};
+        int[] y_poly = {(int)this.getY(), (int)this.getY() + 15, (int)this.getY() + 10, (int)this.getY() + 15};
         g.fillPolygon(x_poly, y_poly, 4);
     }
 }

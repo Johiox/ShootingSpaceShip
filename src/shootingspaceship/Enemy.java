@@ -11,10 +11,7 @@ import java.awt.Color;
  *
  * @author wgpak
  */
-public class Enemy {
-
-    private float x_pos;
-    private float y_pos;
+class Enemy extends Sprite{
     private float delta_x;
     private float delta_y;
     private int max_x;
@@ -23,8 +20,7 @@ public class Enemy {
     private final int collision_distance = 10;
 
     public Enemy(int x, int y, float delta_x, float delta_y, int max_x, int max_y, float delta_y_inc) {
-        x_pos = x;
-        y_pos = y;
+        super(x, y);
         this.delta_x = delta_x;
         this.delta_y = delta_y;
         this.max_x = max_x;
@@ -33,18 +29,19 @@ public class Enemy {
     }
 
     public void move() {
-        x_pos += delta_x;
-        y_pos += delta_y;
+        this.moveX(delta_x);
+        this.moveY(delta_y);
 
-        if (x_pos < 0) {
-            x_pos = 0;
-            delta_x = -delta_x;
-        } else if (x_pos > max_x) {
-            x_pos = max_x;
+        if (this.getX() < 0) {
+            this.setX(0);
             delta_x = -delta_x;
         }
-        if (y_pos > max_y) {
-            y_pos = 0;
+        else if (this.getX() > max_x) {
+            this.setX(max_x);
+            delta_x = -delta_x;
+        }
+        if (this.getY() > max_y) {
+            this.setY(0);
             delta_y += delta_y_inc;
         }
     }
@@ -54,8 +51,8 @@ public class Enemy {
             if (shot == null) {
                 continue;
             }
-            if (-collision_distance <= (y_pos - shot.getY()) && (y_pos - shot.getY() <= collision_distance)) {
-                if (-collision_distance <= (x_pos - shot.getX()) && (x_pos - shot.getX() <= collision_distance)) {
+            if (-collision_distance <= (this.getY() - shot.getY()) && (this.getY() - shot.getY() <= collision_distance)) {
+                if (-collision_distance <= (this.getX() - shot.getX()) && (this.getX() - shot.getX() <= collision_distance)) {
                     //collided.
                     shot.collided();
                     return true;
@@ -66,8 +63,8 @@ public class Enemy {
     }
 
     public boolean isCollidedWithPlayer(Player player) {
-        if (-collision_distance <= (y_pos - player.getY()) && (y_pos - player.getY() <= collision_distance)) {
-            if (-collision_distance <= (x_pos - player.getX()) && (x_pos - player.getX() <= collision_distance)) {
+        if (-collision_distance <= (this.getY() - player.getY()) && (this.getY() - player.getY() <= collision_distance)) {
+            if (-collision_distance <= (this.getX() - player.getX()) && (this.getX() - player.getX() <= collision_distance)) {
                 //collided.
                 return true;
             }
@@ -77,8 +74,8 @@ public class Enemy {
 
     public void draw(Graphics g) {
         g.setColor(Color.yellow);
-        int[] x_poly = {(int) x_pos, (int) x_pos - 10, (int) x_pos, (int) x_pos + 10};
-        int[] y_poly = {(int) y_pos + 15, (int) y_pos, (int) y_pos + 10, (int) y_pos};
+        int[] x_poly = {(int)this.getX(), (int)this.getX() - 10, (int)this.getX(), (int)this.getX() + 10};
+        int[] y_poly = {(int)this.getY() + 15, (int)this.getY(), (int)this.getY() + 10, (int)this.getY()};
         g.fillPolygon(x_poly, y_poly, 4);
     }
 }

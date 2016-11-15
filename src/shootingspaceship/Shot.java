@@ -11,29 +11,17 @@ import java.awt.Color;
  *
  * @author wgpak
  */
-public class Shot {
-
-    private int x_pos;
-    private int y_pos;
+class Shot extends Sprite{
     private boolean alive;
     private final int radius = 3;
 
     public Shot(int x, int y) {
-        x_pos = x;
-        y_pos = y;
+        super(x, y);
         alive = true;
     }
 
-    public int getY() {
-        return y_pos;
-    }
-
-    public int getX() {
-        return x_pos;
-    }
-
     public void moveShot(int speed) {
-        y_pos += speed;
+        moveY(speed);
     }
 
     public void drawShot(Graphics g) {
@@ -41,7 +29,7 @@ public class Shot {
             return;
         }
         g.setColor(Color.yellow);
-        g.fillOval(x_pos, y_pos, radius, radius);
+        g.fillOval((int)getX(), (int)getY(), radius, radius);
     }
 
     public void collided() {
