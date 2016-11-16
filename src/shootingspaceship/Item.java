@@ -19,7 +19,7 @@ class Item extends Enemy{
     public Item(int x, int y, float delta_x, float delta_y, int max_x, int max_y, float delta_y_inc, int itemNum) {
         super(x, y, delta_x, delta_y, max_x, max_y, delta_y_inc, 1);
         this.itemNum = itemNum;
-        count = 0;
+        this.count = 0;
     }
     
     public int getItemNum() {
@@ -33,27 +33,26 @@ class Item extends Enemy{
         if(this.getX() < 0) {
             this.setX(0);
             this.setDeltaX(-this.getDeltaX());
-            ++count;
+            ++this.count;
         }
         else if(this.getX() >= this.getMaxX()) {
             this.setX(this.getMaxX());
             this.setDeltaX(-this.getDeltaX());
-            ++count;
+            ++this.count;
         }
         if (this.getY() >= this.getMaxY()) {//y값 튕김 효과
             this.setY(this.getMaxY());
             this.setDeltaY(this.getDeltaY() - this.getDeltaYINC());
-            ++count;
+            ++this.count;
         }
         else if (this.getY() < 0) {
             this.setDeltaY(this.getDeltaY() + this.getDeltaYINC());
-            ++count;
+            ++this.count;
         }
     }
     
     public boolean count() {
-        if(count == 10) {
-            count = 0;
+        if(count > 10) {
             return false;
         }
         else {

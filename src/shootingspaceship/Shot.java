@@ -24,6 +24,10 @@ class Shot extends Sprite{
         return alive;
     }
     
+    public int getRadius() {
+        return radius;
+    }
+    
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
@@ -31,12 +35,14 @@ class Shot extends Sprite{
     public void moveShot(int speed) {
         moveY(speed);
     }
-
+    // Draw Shot Cased Type
     public void drawShot(Graphics g) {
-        if (!alive) {
+        if(!alive) {
             return;
         }
-        g.setColor(Color.yellow);
-        g.fillOval((int)getX(), (int)getY(), radius, radius);
+        else {
+            g.setColor(Color.yellow);
+            g.fillOval((int)getX(), (int)getY(), this.getRadius(), this.getRadius());
+        }
     }
 }
