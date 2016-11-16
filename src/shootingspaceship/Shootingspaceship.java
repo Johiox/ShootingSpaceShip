@@ -11,8 +11,8 @@ public class Shootingspaceship extends JPanel implements Runnable {
     private Player player;
     private ShotType[][] shots;
     private int[] shotCount;
-    private ArrayList enemies;
-    private ArrayList items;
+    private ArrayList<Enemy> enemies;
+    private ArrayList<Item> items;
     private int shotSpeed = -5;
     private int playerLeftSpeed = -3;
     private int playerRightSpeed = 3;
@@ -71,8 +71,8 @@ public class Shootingspaceship extends JPanel implements Runnable {
         increaseFourthShot = 8;
         currentShot = 0;
         countFire = 0;
-        enemies = new ArrayList();
-        items = new ArrayList();
+        enemies = new ArrayList<Enemy>();
+        items = new ArrayList<Item>();
         enemySize = 0;
         rand = new Random(1);
         timer = new javax.swing.Timer(enemyTimeGap, new addANewEnemy());
@@ -103,7 +103,8 @@ public class Shootingspaceship extends JPanel implements Runnable {
 
                 Enemy newEnemy = new Enemy((int) (rand.nextFloat() * width), 0, horspeed, downspeed, width, height, enemyDownSpeedInc, 10);
                 enemies.add(newEnemy);
-            } else {
+            }
+            else {
                 timer.stop();
             }
         }
@@ -242,7 +243,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
                     for(int i = 0; i < shots[currentShot].length; ++i) {
                         if(0 < shotCount[currentShot])
                             if(shots[currentShot][i] == null) {
-                                shots[currentShot][i] = player.generateShot(currentShot + 1);
+                                shots[currentShot][i] = player.generateShot(currentShot + 10);
                                 if(currentShot != 0) {
                                     --shotCount[currentShot];
                                 }
@@ -256,14 +257,14 @@ public class Shootingspaceship extends JPanel implements Runnable {
                 }
             }
 
-            Iterator enemyList = enemies.iterator();
+            Iterator<Enemy> enemyList = enemies.iterator();
             while (enemyList.hasNext()) {
-                Enemy enemy = (Enemy) enemyList.next();
+                Enemy enemy = enemyList.next();
                 enemy.move();
             }
-            Iterator itemList = items.iterator();
+            Iterator<Item> itemList = items.iterator();
             while(itemList.hasNext()) {
-                Item item = (Item)itemList.next();
+                Item item = itemList.next();
                 item.move();
             }
 
@@ -300,23 +301,23 @@ public class Shootingspaceship extends JPanel implements Runnable {
         // draw player
         player.drawPlayer(g);
 
-        Iterator enemyList = enemies.iterator();
+        Iterator<Enemy> enemyList = enemies.iterator();
         while (enemyList.hasNext()) {
-            Enemy enemy = (Enemy) enemyList.next();
+            Enemy enemy = enemyList.next();
             enemy.draw(g);
             if (enemy.isCollidedWithShot(shots)) {
-                if(enemy.getHealth() < 0) {
-                    if(rand.nextInt(9) <= 2) { // Creation Item is 1/2
-                        Item newItem = new Item((int)enemy.getX(), (int)enemy.getY(), enemy.getDeltaX(), enemy.getDeltaY(), enemy.getMaxX(), enemy.getMaxY(), enemy.getDeltaYINC(), rand.nextInt(4));
+                if(enemy.getHealth() <= 0) {
+                    if(true) { // Creation Item is 1/3
+                        Item newItem = new Item((int)enemy.getX(), (int)enemy.getY(), rand.nextInt(6), rand.nextInt(6), enemy.getMaxX(), enemy.getMaxY(), enemy.getDeltaYINC(), rand.nextInt(4));
                         items.add(newItem);
                     }
                     enemyList.remove();
                     --enemySize;
                 }
             }
-            Iterator itemList = items.iterator();
+            Iterator<Item> itemList = items.iterator();
             if(itemList.hasNext()) {
-                Item item = (Item)itemList.next();
+                Item item = itemList.next();
                 item.draw(g);
                 if(item.count()) {
                     itemList.remove();
@@ -353,7 +354,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
                 }
             }
             if (enemy.isCollidedWithPlayer(player)) {
-                if(playerHealth < 0) {
+                if(playerHealth <= 0) {
                     enemyList.remove();
                     System.exit(0);
                 }
