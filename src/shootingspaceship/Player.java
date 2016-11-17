@@ -46,7 +46,7 @@ class Player extends Sprite{
         ShotType shot = new ShotType((int)this.getX(), (int)this.getY(), this.getMaxX(), this.getMaxY(), damage);
         return shot;
     }
-
+    
     public void drawPlayer(Graphics g) {
         g.setColor(Color.red);
         int[] x_poly = {(int)this.getX(), (int)this.getX() - 10, (int)this.getX(), (int)this.getX() + 10};
