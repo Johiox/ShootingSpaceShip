@@ -20,6 +20,8 @@ public class Shootingspaceship extends JPanel implements Runnable {
     private int playerDownSpeed = 2;
     private final int width = 320;
     private final int height = 640;
+    private int mouseX;
+    private int mouseY;
     private final int playerMargin = 10;
     private final int enemyMaxDownSpeed = 1;
     private final int enemyMaxHorizonSpeed = 1;
@@ -50,7 +52,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
     private int maxShotNum = 20;
     private int currentShot;
     private int playerHealth;
-    private int score;
+    private double score;
     private int stage;
     private final int infiniteFire = 200;
 
@@ -86,6 +88,8 @@ public class Shootingspaceship extends JPanel implements Runnable {
         gamePause = false;
         playerHealth = 3;
         stage = 1;
+        mouseX=0;
+        mouseY=0;
     }
 
     public void start() {
@@ -114,7 +118,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
         }
     }
 
-    private class ShipControl implements KeyListener,MouseListener {
+    private class ShipControl implements KeyListener, MouseListener, MouseMotionListener {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_A:
@@ -188,6 +192,12 @@ public class Shootingspaceship extends JPanel implements Runnable {
                     playerFire = false;
                     break;
             }
+        }
+        public void mouseMoved(MouseEvent e) {
+            mouseX = e.getXOnScreen();
+            mouseY = e.getYOnScreen();
+        }
+        public void mouseDragged(MouseEvent e) {
         }
         public void keyTyped(KeyEvent e) {
         }
@@ -265,7 +275,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
             }
 
             repaint();
-
+            
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
@@ -293,7 +303,6 @@ public class Shootingspaceship extends JPanel implements Runnable {
 
     public void paintComponent(Graphics g) {
         initImage(g);
-
         // draw Player
         player.drawPlayer(g);
 
@@ -305,18 +314,21 @@ public class Shootingspaceship extends JPanel implements Runnable {
             if (enemy.isCollidedWithShot(shots)) {
                 if(enemy.getHealth() <= 0) {
                     if(rand.nextInt(9) < 2) {// Creation Item is 1/3
-                        Item newItem = new Item((int)enemy.getX(), (int)enemy.getY(), (rand.nextFloat() * 2) + 0.1f, (rand.nextFloat() * 2) + 0.1f, enemy.getMaxX(), enemy.getMaxY(), enemy.getDeltaYINC(), rand.nextInt(4));
+                        Item newItem = new Item((int)enemy.getX(), (int)enemy.getY(), (rand.nextFloat() * 2) + 0.9f, (rand.nextFloat() * 2) + 0.9f, enemy.getMaxX(), enemy.getMaxY(), (rand.nextFloat() * 2) + 0.9f, rand.nextInt(4));
                         items.add(newItem);
                     }
+                    --enemySize;
                     enemyList.remove();
                     score += 10;
-                    --enemySize;
                 }
             }
             Iterator<Item> itemList = items.iterator();
             while(itemList.hasNext()) {
                 Item item = itemList.next();
                 item.draw(g);
+                if(!(item.count())) {
+                    itemList.remove();
+                }
                 if(item.isCollidedWithPlayer(player)) {
                     switch(item.getItemNum()) {
                         case 0: // Increase Second Shot
@@ -351,7 +363,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
             }
             // Check Player Collide Enemy 
             if (enemy.isCollidedWithPlayer(player)) {
-                if(playerHealth < 0) {
+                if(playerHealth <= 0) {
                     enemyList.remove();
                     System.exit(0);
                 }
@@ -364,7 +376,7 @@ public class Shootingspaceship extends JPanel implements Runnable {
             // Check Player Near Enemy
             if(enemy.isGrazeWithPlayer(player)) {
                 enemy.grazedEnemy(g);
-                score += 1;
+                score += 0.2;
             }
         }
 
@@ -372,13 +384,12 @@ public class Shootingspaceship extends JPanel implements Runnable {
         for(int j = 0; j < shots.length; ++j) {
             for (int i = 0; i < shots[j].length; i++) {
                 if (shots[j][i] != null) {
-                    shots[j][i].drawShot(g, currentShot);
+                    shots[j][i].drawShot(g, j);
                 }
             }
         }
-        
         // Display Information
-        g.drawString("Score : " + score, 250, 30);
+        g.drawString("Score : " + (int)score, 250, 30);
         g.drawString("Stage : " + stage, 250, 40);
         g.drawString("Life : " + playerHealth, 250, 50);
         g.drawString("First : ∞", 250, 60);

@@ -4,23 +4,21 @@
  */
 package shootingspaceship;
 
-import java.awt.Graphics;
-import java.awt.Color;
 /**
  *
  * @author wgpak
  */
 import java.awt.Graphics;
-import java.awt.Color;
 
 class Player extends Sprite{
     private int min_x;
     private int min_y;
-
+    
     public Player(int x, int y, int min_x, int max_x, int min_y, int max_y) {
         super(x, y, max_x, max_y);
         this.min_x = min_x;
         this.min_y = min_y;
+        setImage(toolkit.getImage("src/shootingspaceship/Plane.png"));
     }
 
     public void movingX(int speed) {
@@ -48,9 +46,7 @@ class Player extends Sprite{
     }
     
     public void drawPlayer(Graphics g) {
-        g.setColor(Color.red);
-        int[] x_poly = {(int)this.getX(), (int)this.getX() - 10, (int)this.getX(), (int)this.getX() + 10};
-        int[] y_poly = {(int)this.getY(), (int)this.getY() + 15, (int)this.getY() + 10, (int)this.getY() + 15};
-        g.fillPolygon(x_poly, y_poly, 4);
+        // Drawing player image
+        g.drawImage(getImage(), (int)this.getX() - 27, (int)this.getY() - 8, null);
     }
 }

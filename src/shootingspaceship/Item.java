@@ -52,7 +52,7 @@ class Item extends Enemy{
     }
     
     public boolean count() {
-        if(count > 10) {
+        if(count > 5) {
             return false;
         }
         else {

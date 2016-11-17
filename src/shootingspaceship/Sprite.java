@@ -5,6 +5,9 @@
  */
 package shootingspaceship;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+
 /**
  *
  * @author mschoi
@@ -14,6 +17,9 @@ class Sprite {
     private float pos_y;
     private int max_x;
     private int max_y;
+    private Image image;
+    protected Toolkit toolkit = Toolkit.getDefaultToolkit();
+    
     public Sprite(float pos_x, float pos_y, int max_x, int max_y) {
         this.pos_x = pos_x;
         this.pos_y = pos_y;
@@ -43,5 +49,11 @@ class Sprite {
     }
     public int getMaxY() {
         return max_y;
+    }
+    public Image getImage() {
+        return image;
+    }
+    public void setImage(Image image) {
+        this.image = image;
     }
 }

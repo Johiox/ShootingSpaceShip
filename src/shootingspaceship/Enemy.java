@@ -15,15 +15,16 @@ class Enemy extends Sprite{
     private float delta_x;
     private float delta_y;
     private float delta_y_inc;
-    private final int collision_distance = 10;
+    private final int collision_distance = 15;
     private int healthPoint;
-
+    
     public Enemy(int x, int y, float delta_x, float delta_y, int max_x, int max_y, float delta_y_inc, int healthPoint) {
         super(x, y, max_x, max_y);
         this.delta_x = delta_x;
         this.delta_y = delta_y;
         this.delta_y_inc = delta_y_inc;
         this.healthPoint = healthPoint;
+        setImage(toolkit.getImage("src/shootingspaceship/EnemyPlane.png"));
     }
     
     public int getHealth() {
@@ -107,10 +108,8 @@ class Enemy extends Sprite{
     }
 
     public void draw(Graphics g) {
-        g.setColor(Color.yellow);
-        int[] x_poly = {(int)this.getX(), (int)this.getX() - 10, (int)this.getX(), (int)this.getX() + 10};
-        int[] y_poly = {(int)this.getY() + 15, (int)this.getY(), (int)this.getY() + 10, (int)this.getY()};
-        g.fillPolygon(x_poly, y_poly, 4);
+        // Drawing enemy images
+        g.drawImage(getImage(), (int)this.getX() - 15, (int)this.getY(), null);
     }
     
     public void grazedEnemy(Graphics g) {
